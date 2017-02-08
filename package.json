@@ -1,0 +1,16 @@
+{
+  "name": "environment",
+  "description": "A lightweight tool to provide common environment settings",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:ezzygemini/environment.git"
+  },
+  "scripts": {
+    "test": "node node_modules/testing"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "testing": "git://github.com/ezzygemini/testing.git"
+  }
+}

@@ -46,7 +46,7 @@ class Environment {
      * @type {boolean}
      */
     this.production =
-      !this.development && !this.alpha && !this.beta && this.gamma;
+      !this.development && !this.alpha && !this.beta && !this.gamma;
 
     /**
      * The application port.
