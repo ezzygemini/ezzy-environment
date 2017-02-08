@@ -4,7 +4,7 @@ class Environment {
 
   constructor () {
 
-    let env = argument('NODE_ENV', 'production');
+    let env = argument(['ENVIRONMENT','NODE_ENV'], 'production');
 
     // Sometimes the argument is just passed as --production
     if (argument('PRODUCTION', null)) {
