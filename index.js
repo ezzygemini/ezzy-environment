@@ -1,5 +1,5 @@
 const Environment = require('./src/Environment');
-const logger = require('logger');
+const logger = require('logger').logger;
 
 /** @type {Environment} */
 const environment = new Environment();
