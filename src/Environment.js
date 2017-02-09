@@ -42,6 +42,11 @@ class Environment {
     this.gamma = env === 'gamma';
 
     /**
+     * The environment name.
+     */
+    this.name = env;
+
+    /**
      * If environment is in production
      * @type {boolean}
      */
