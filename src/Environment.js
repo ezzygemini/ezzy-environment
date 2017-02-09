@@ -1,4 +1,5 @@
 const argument = require('argument');
+const path = require('path');
 
 class Environment {
 
@@ -45,6 +46,11 @@ class Environment {
      * The environment name.
      */
     this.name = env;
+
+    /**
+     * Specifies the node modules path.
+     */
+    this.nodeModules = path.normalize(__dirname + '/../../');
 
     /**
      * If environment is in production
