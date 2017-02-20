@@ -5,6 +5,8 @@ class Environment {
 
   constructor () {
 
+    console.log(`[PROCESS] ${JSON.stringify(process.env)}`);
+
     let env = argument(['ENVIRONMENT','NODE_ENV'], 'production');
 
     // Sometimes the argument is just passed as --production
