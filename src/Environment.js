@@ -1,3 +1,9 @@
+let pkg;
+try{
+  pkg = require('../../../package.json');
+}catch(e){
+  pkg = {};
+}
 const argument = require('argument');
 const path = require('path');
 
@@ -95,6 +101,28 @@ class Environment {
    */
   argument(...args){
     return argument.apply(this, args);
+  }
+
+  /**
+   * Gets configuration from the package.json and overrides depending on
+   * environment.
+   * @example
+   * {
+   *  "prop": { "a":true },
+   *  "development": { "prop":{ "a":false } }
+   * }
+   * environment.configuration('prop').a = false; // development
+   * environment.configuration('prop').a = true; // every other environment
+   *
+   * @param scope
+   * @returns {*|{}}
+   */
+  getConfiguration(scope){
+    let config = pkg[scope] || {};
+    if(typeof config === 'object' && pkg[this.name]){
+      config = Object.assign(config, pkg[this.name]);
+    }
+    return config;
   }
 
 }
