@@ -118,7 +118,7 @@ class Environment {
    * @returns {*|{}}
    */
   getConfiguration(scope){
-    let config = pkg[scope] || {};
+    let config = pkg[scope] || pkg[`_${scope}`] || {};
     if(typeof config === 'object' && pkg[this.name]){
       config = Object.assign(config, pkg[this.name]);
     }
