@@ -1,7 +1,7 @@
 let pkg;
-try{
+try {
   pkg = require('../../../package.json');
-}catch(e){
+} catch (e) {
   pkg = {};
 }
 const argument = require('argument');
@@ -9,14 +9,15 @@ const path = require('path');
 
 class Environment {
 
-  constructor () {
+  constructor() {
 
     console.log(`[PROCESS] ${JSON.stringify(process.env)}`);
 
-    let env = argument(['ENVIRONMENT','NODE_ENV'], 'production');
+    let env = argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
 
     // Sometimes the argument is just passed as --production
-    if (argument('PRODUCTION', null)) {
+    const prodArg = argument('PRODUCTION', null);
+    if (prodArg && prodArg !== 'false') {
       env = 'production';
     }
 
@@ -80,7 +81,7 @@ class Environment {
    * @param {string} key The key to set.
    * @param {*} value The value of the environment.
    */
-  set (key, value) {
+  set(key, value) {
     this[key] = value;
   }
 
@@ -90,7 +91,7 @@ class Environment {
    * @param {*} defaultValue The default value to return if undefined.
    * @returns {*}
    */
-  get (key, defaultValue) {
+  get(key, defaultValue) {
     return this[key] || defaultValue;
   }
 
@@ -99,7 +100,7 @@ class Environment {
    * @param {*} args The arguments to be passed.
    * @returns {*}
    */
-  argument(...args){
+  argument(...args) {
     return argument.apply(this, args);
   }
 
@@ -114,13 +115,17 @@ class Environment {
    * environment.configuration('prop').a = false; // development
    * environment.configuration('prop').a = true; // every other environment
    *
-   * @param scope
+   * @param {string} scope The scope to look for.
+   * @param {Object} defaultConfig The default configuration if none is found.
    * @returns {*|{}}
    */
-  getConfiguration(scope){
-    let config = pkg[scope] || pkg[`_${scope}`] || {};
-    if(typeof config === 'object' && pkg[this.name]){
+  getConfiguration(scope, defaultConfig = {}) {
+    let config = pkg[scope] || pkg[`_${scope}`] || defaultConfig;
+    if (typeof config === 'object' && pkg[this.name]) {
       config = Object.assign(config, pkg[this.name]);
+    }
+    if (typeof config === 'object' && config[this.name]) {
+      config = Object.assign(config, config[this.name]);
     }
     return config;
   }

@@ -11,7 +11,15 @@
   },
   "license": "MIT",
   "dependencies": {
-    "logger": "git://github.com/ezzygemini/logger.git",
-    "testing": "git://github.com/ezzygemini/testing.git"
+    "logger": "ezzygemini/logger",
+    "testing": "ezzygemini/testing"
+  },
+  "_testProp": {
+    "test": "one"
+  },
+  "development": {
+    "_testProp": {
+      "test": "two"
+    }
   }
 }
