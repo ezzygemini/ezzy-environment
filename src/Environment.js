@@ -124,21 +124,26 @@ class Environment {
    */
   getConfiguration(scope, defaultConfig = {}) {
     let config = pkg[scope] || pkg[`_${scope}`] || defaultConfig;
-    if(typeof config === 'object'){
+    if (typeof config === 'object') {
 
-      if(pkg[this.name] && pkg[this.name][scope]){
-        if(typeof pkg[this.name][scope] === 'object'){
-          config = deepmerge(config, pkg[this.name][scope]);
-        }else{
-          config = pkg[this.name][scope];
+      let subPkg = pkg[this.name] || pkg[`_${this.name}`];
+      if (subPkg) {
+        const subConfig = subPkg[scope] || subPkg[`_${scope}`];
+        if (subConfig) {
+          if (typeof subConfig === 'object') {
+            config = deepmerge(config, subConfig);
+          } else {
+            config = subConfig;
+          }
         }
       }
 
-      if(config[this.name]){
-        if(typeof config[this.name] === 'object'){
-          config = deepmerge(config, config[this.name]);
-        }else{
-          config = config[this.name];
+      subPkg = config[this.name] || config[`_${this.name}`];
+      if (subPkg) {
+        if (typeof subPkg === 'object') {
+          config = deepmerge(config, subPkg);
+        } else {
+          config = subPkg;
         }
       }
     }
