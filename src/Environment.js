@@ -6,6 +6,7 @@ try {
 }
 const argument = require('argument');
 const path = require('path');
+const deepmerge = require('deepmerge');
 
 class Environment {
 
@@ -110,22 +111,36 @@ class Environment {
    * @example
    * {
    *  "prop": { "a":true },
-   *  "development": { "prop":{ "a":false } }
+   *  "development": {
+   *    "prop":{ "a":false }
+   *  }
    * }
    * environment.configuration('prop').a = false; // development
    * environment.configuration('prop').a = true; // every other environment
    *
    * @param {string} scope The scope to look for.
    * @param {Object} defaultConfig The default configuration if none is found.
-   * @returns {*|{}}
+   * @returns {*|Object}
    */
   getConfiguration(scope, defaultConfig = {}) {
     let config = pkg[scope] || pkg[`_${scope}`] || defaultConfig;
-    if (typeof config === 'object' && pkg[this.name]) {
-      config = Object.assign(config, pkg[this.name]);
-    }
-    if (typeof config === 'object' && config[this.name]) {
-      config = Object.assign(config, config[this.name]);
+    if(typeof config === 'object'){
+
+      if(pkg[this.name] && pkg[this.name][scope]){
+        if(typeof pkg[this.name][scope] === 'object'){
+          config = deepmerge(config, pkg[this.name][scope]);
+        }else{
+          config = pkg[this.name][scope];
+        }
+      }
+
+      if(config[this.name]){
+        if(typeof config[this.name] === 'object'){
+          config = deepmerge(config, config[this.name]);
+        }else{
+          config = config[this.name];
+        }
+      }
     }
     return config;
   }

@@ -11,15 +11,8 @@
   },
   "license": "MIT",
   "dependencies": {
+    "deepmerge": "^1.5.1",
     "logger": "ezzygemini/logger",
     "testing": "ezzygemini/testing"
-  },
-  "_testProp": {
-    "test": "one"
-  },
-  "development": {
-    "_testProp": {
-      "test": "two"
-    }
   }
 }
