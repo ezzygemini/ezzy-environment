@@ -4,7 +4,7 @@ try {
 } catch (e) {
   pkg = {};
 }
-const argument = require('argument');
+const argument = require('ezzy-argument');
 const path = require('path');
 const deepmerge = require('deepmerge');
 

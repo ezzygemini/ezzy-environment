@@ -1,18 +1,21 @@
 {
-  "name": "environment",
+  "name": "ezzy-environment",
   "description": "A lightweight tool to provide common environment settings",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:ezzygemini/environment.git"
   },
   "scripts": {
-    "test": "node node_modules/testing"
+    "test": "node node_modules/ezzy-testing"
   },
   "license": "MIT",
   "dependencies": {
     "deepmerge": "^1.5.1",
-    "logger": "github:ezzygemini/logger",
-    "testing": "github:ezzygemini/testing"
+    "ezzy-argument": "^0.1.0",
+    "ezzy-logger": "^0.1.1"
+  },
+  "devDependencies": {
+    "ezzy-testing": "^0.1.2"
   }
 }
