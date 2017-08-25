@@ -1,5 +1,5 @@
 const Environment = require('./src/Environment');
-const logger = require('logger').logger;
+const logger = require('ezzy-logger').logger;
 
 /** @type {Environment} */
 const environment = new Environment();
