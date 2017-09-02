@@ -12,7 +12,10 @@ class Environment {
 
   constructor() {
 
-    console.log(`[PROCESS] ${JSON.stringify(process.env)}`);
+    const json = JSON.stringify(process.env);
+    if (json !== '{}') {
+      console.log(`[PROCESS] ${json}`);
+    }
 
     let env = argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
 
@@ -82,7 +85,7 @@ class Environment {
    * @param {string} key The key to set.
    * @param {*} value The value of the environment.
    */
-  set(key, value) {
+  set (key, value) {
     this[key] = value;
   }
 
@@ -92,7 +95,7 @@ class Environment {
    * @param {*} defaultValue The default value to return if undefined.
    * @returns {*}
    */
-  get(key, defaultValue) {
+  get (key, defaultValue) {
     return this[key] || defaultValue;
   }
 
