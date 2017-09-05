@@ -7,9 +7,16 @@ try {
 const argument = require('ezzy-argument');
 const path = require('path');
 const deepmerge = require('deepmerge');
+let inst;
 
+/**
+ * Environment
+ */
 class Environment {
 
+  /**
+   * Constructor.
+   */
   constructor() {
 
     const json = JSON.stringify(process.env);
@@ -17,6 +24,7 @@ class Environment {
       console.log(`[PROCESS] ${json}`);
     }
 
+    // Look for a variable in our arguments
     let env = argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
 
     // Sometimes the argument is just passed as --production
@@ -81,11 +89,22 @@ class Environment {
   }
 
   /**
+   * Default instance of the environment.
+   * @returns {Environment}
+   */
+  static get inst() {
+    if (!inst) {
+      inst = new Environment();
+    }
+    return inst;
+  }
+
+  /**
    * Sets an environment property.
    * @param {string} key The key to set.
    * @param {*} value The value of the environment.
    */
-  set (key, value) {
+  set(key, value) {
     this[key] = value;
   }
 
@@ -95,7 +114,7 @@ class Environment {
    * @param {*} defaultValue The default value to return if undefined.
    * @returns {*}
    */
-  get (key, defaultValue) {
+  get(key, defaultValue) {
     return this[key] || defaultValue;
   }
 
