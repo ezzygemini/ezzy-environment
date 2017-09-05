@@ -1,7 +1,7 @@
 {
   "name": "ezzy-environment",
   "description": "A lightweight tool to provide common environment settings",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "author": {
     "name": "Moises Romero",
     "url": "http://ezzygemini.com",
