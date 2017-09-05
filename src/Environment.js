@@ -33,6 +33,22 @@ class Environment {
       env = 'production';
     }
 
+    // Set the environment.
+    this.setEnvironment(env);
+
+    /**
+     * The application port.
+     * @type {number}
+     */
+    this.port = argument('PORT', 9000);
+
+  }
+
+  /**
+   * Sets the environment.
+   * @param env
+   */
+  setEnvironment(env) {
     /**
      * If environment is in development
      * @type {boolean}
@@ -79,13 +95,6 @@ class Environment {
      */
     this.production =
       !this.development && !this.alpha && !this.beta && !this.gamma;
-
-    /**
-     * The application port.
-     * @type {number}
-     */
-    this.port = argument('PORT', 9000);
-
   }
 
   /**
