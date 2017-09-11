@@ -17,10 +17,10 @@
   "license": "MIT",
   "dependencies": {
     "deepmerge": "^1.5.1",
-    "ezzy-argument": "^0.1.0",
-    "ezzy-logger": "^0.1.1"
+    "ezzy-argument": "^0.1.11",
+    "ezzy-logger": "^0.1.16"
   },
   "devDependencies": {
-    "ezzy-testing": "^0.1.2"
+    "ezzy-testing": "^0.1.13"
   }
 }
