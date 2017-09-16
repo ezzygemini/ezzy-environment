@@ -21,6 +21,6 @@
     "ezzy-logger": "^0.1.16"
   },
   "devDependencies": {
-    "ezzy-testing": "^0.1.13"
+    "ezzy-testing": "^0.1.16"
   }
 }

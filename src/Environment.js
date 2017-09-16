@@ -2,7 +2,7 @@ let pkg;
 try {
   pkg = require('../../../package.json');
 } catch (e) {
-  pkg = {};
+  pkg = null;
 }
 const argument = require('ezzy-argument');
 const path = require('path');
@@ -42,6 +42,13 @@ class Environment {
      */
     this.port = argument('PORT', 9000);
 
+    /**
+     * Cache of entries.
+     * @type {Object}
+     * @private
+     */
+    this._cache = {};
+
   }
 
   /**
@@ -50,10 +57,10 @@ class Environment {
    */
   setEnvironment(env) {
     /**
-     * If environment is in development
+     * If environment is in development.
      * @type {boolean}
      */
-    this.development = env === 'development' || env === 'dev';
+    this.development = env.indexOf('dev') > -1;
 
     /**
      * Shortcut to development property.
@@ -62,19 +69,25 @@ class Environment {
     this.dev = this.development;
 
     /**
-     * If environment is in alpha
+     * If environment is in testing.
+     * @type {boolean}
+     */
+    this.test = env.indexOf('test') > -1;
+
+    /**
+     * If environment is in alpha.
      * @type {boolean}
      */
     this.alpha = env === 'alpha';
 
     /**
-     * If environment is in beta
+     * If environment is in beta.
      * @type {boolean}
      */
     this.beta = env === 'beta';
 
     /**
-     * If environment is in gamma
+     * If environment is in gamma.
      * @type {boolean}
      */
     this.gamma = env === 'gamma';
@@ -82,7 +95,19 @@ class Environment {
     /**
      * The environment name.
      */
-    this.name = env;
+    if (this.dev) {
+      this.name = 'development';
+    } else if (this.test) {
+      this.name = 'test';
+    } else if (this.alpha) {
+      this.name = 'alpha';
+    } else if (this.beta) {
+      this.name = 'beta';
+    } else if (this.gamma) {
+      this.name = 'gamma';
+    } else {
+      this.name = 'production';
+    }
 
     /**
      * Specifies the node modules path.
@@ -93,8 +118,8 @@ class Environment {
      * If environment is in production
      * @type {boolean}
      */
-    this.production =
-      !this.development && !this.alpha && !this.beta && !this.gamma;
+    this.production = !this.development && !this.alpha &&
+      !this.beta && !this.gamma && !this.test;
   }
 
   /**
@@ -113,7 +138,7 @@ class Environment {
    * @param {string} key The key to set.
    * @param {*} value The value of the environment.
    */
-  set(key, value) {
+  set (key, value) {
     this[key] = value;
   }
 
@@ -123,7 +148,7 @@ class Environment {
    * @param {*} defaultValue The default value to return if undefined.
    * @returns {*}
    */
-  get(key, defaultValue) {
+  get (key, defaultValue) {
     return this[key] || defaultValue;
   }
 
@@ -154,30 +179,31 @@ class Environment {
    * @returns {*|Object}
    */
   getConfiguration(scope, defaultConfig = {}) {
-    let config = pkg[scope] || pkg[`_${scope}`] || defaultConfig;
-    if (typeof config === 'object') {
-
-      let subPkg = pkg[this.name] || pkg[`_${this.name}`];
-      if (subPkg) {
-        const subConfig = subPkg[scope] || subPkg[`_${scope}`];
-        if (subConfig) {
-          if (typeof subConfig === 'object') {
-            config = deepmerge(config, subConfig);
-          } else {
-            config = subConfig;
-          }
-        }
-      }
-
-      subPkg = config[this.name] || config[`_${this.name}`];
-      if (subPkg) {
-        if (typeof subPkg === 'object') {
-          config = deepmerge(config, subPkg);
-        } else {
-          config = subPkg;
-        }
-      }
+    if (this._cache[scope]) {
+      return this._cache[scope];
     }
+
+    let configuration = pkg || defaultConfig;
+    const scopes = scope.split('.');
+    const namespace = scopes.shift();
+    const subScopes = scopes.join('.');
+
+    if (typeof configuration[this.name] === 'object') {
+      configuration = deepmerge(configuration, configuration[this.name]);
+    }
+
+    let config = configuration[namespace] || configuration[`_${namespace}`];
+
+    if (typeof config === 'object' && typeof config[this.name] === 'object') {
+      config = deepmerge(config, config[this.name]);
+    }
+
+    if (subScopes.length) {
+      config = eval(`config.${scopes.join('.')}`);
+    }
+
+    this._cache[scope] = config;
+
     return config;
   }
 
