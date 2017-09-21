@@ -20,7 +20,7 @@ class Environment {
   constructor() {
 
     const json = JSON.stringify(process.env);
-    if (json !== '{}') {
+    if (json !== '{}' && !process.env.HIDE_ARGUMENTS) {
       console.log(`[PROCESS] ${json}`);
     }
 
@@ -188,8 +188,10 @@ class Environment {
     const namespace = scopes.shift();
     const subScopes = scopes.join('.');
 
-    if (typeof configuration[this.name] === 'object') {
-      configuration = deepmerge(configuration, configuration[this.name]);
+    const envConfig = configuration[this.name] ||
+      configuration[`_${this.name}`] || configuration[this.name.toUpperCase()];
+    if (typeof envConfig === 'object') {
+      configuration = deepmerge(configuration, envConfig);
     }
 
     let config = configuration[namespace] || configuration[`_${namespace}`];

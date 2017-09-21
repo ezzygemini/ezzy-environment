@@ -80,7 +80,7 @@ describe('Environment', () => {
           }
         }
       },
-      test: {
+      TEST: {
         _anotherProp: {
           prop2: {
             a: 2

@@ -12,7 +12,11 @@
     "url": "https://github.com/ezzygemini/ezzy-environment.git"
   },
   "scripts": {
-    "test": "node node_modules/ezzy-testing"
+    "coverage": "node node_modules/ezzy-testing/coverage",
+    "pretest": "npm install",
+    "test": "node node_modules/ezzy-testing",
+    "prebuild": "npm install",
+    "build": "npm run coverage"
   },
   "license": "MIT",
   "dependencies": {
