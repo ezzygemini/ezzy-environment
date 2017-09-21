@@ -22,7 +22,7 @@
   "dependencies": {
     "deepmerge": "^1.5.2",
     "ezzy-argument": "^0.1.17",
-    "ezzy-logger": "^0.1.20"
+    "ezzy-logger": "^0.1.21"
   },
   "devDependencies": {
     "ezzy-testing": "^0.1.21"
