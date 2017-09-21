@@ -20,12 +20,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "deepmerge": "^1.5.1",
+    "deepmerge": "^1.5.2",
     "ezzy-argument": "^0.1.14",
-    "ezzy-logger": "^0.1.17",
-    "ezzy-testing": "^0.1.17"
+    "ezzy-logger": "^0.1.18"
   },
   "devDependencies": {
-    "ezzy-testing": "^0.1.16"
+    "ezzy-testing": "^0.1.18"
   }
 }
