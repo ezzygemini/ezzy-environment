@@ -21,8 +21,9 @@
   "license": "MIT",
   "dependencies": {
     "deepmerge": "^1.5.1",
-    "ezzy-argument": "^0.1.13",
-    "ezzy-logger": "^0.1.16"
+    "ezzy-argument": "^0.1.14",
+    "ezzy-logger": "^0.1.17",
+    "ezzy-testing": "^0.1.17"
   },
   "devDependencies": {
     "ezzy-testing": "^0.1.16"
