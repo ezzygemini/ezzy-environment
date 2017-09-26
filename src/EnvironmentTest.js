@@ -14,6 +14,7 @@ describe('Environment', () => {
     expect(environment.gamma).toBe(false);
     expect(environment.production).toBe(false);
     expect(environment.test).toBe(true);
+    expect(environment.testing).toBe(true);
     done();
   });
 

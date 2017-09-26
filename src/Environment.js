@@ -75,6 +75,12 @@ class Environment {
     this.test = env.indexOf('test') > -1;
 
     /**
+     * Shortcut to testing property.
+     * @type {boolean}
+     */
+    this.testing = this.test;
+
+    /**
      * If environment is in alpha.
      * @type {boolean}
      */
