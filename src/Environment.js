@@ -216,8 +216,10 @@ class Environment {
 
     let config = configuration[namespace] || configuration[`_${namespace}`];
 
-    if (typeof config === 'object' && typeof config[this.name] === 'object') {
-      config = deepmerge(config, config[this.name]);
+    const subEnvConfig = config[this.name] || config[`_${this.name}`] ||
+      config[this.name.toUpperCase()];
+    if (subEnvConfig) {
+      config = deepmerge(config, subEnvConfig);
     }
 
     if (subScopes.length) {

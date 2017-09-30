@@ -67,6 +67,33 @@ describe('Environment', () => {
     done();
   });
 
+  it('should access private configuration options', () => {
+    const conf = environment.getConfiguration('sample', {
+      _sample: 'abc',
+      TEST: {
+        _sample: 'def'
+      }
+    });
+    expect(conf).toBe('def');
+  });
+
+  it('should access correct configuration option', () => {
+    let conf = environment.getConfiguration('sample', {
+      _sample: 'abc',
+      TEST: {
+        _sample: ''
+      }
+    });
+    expect(conf).toBe('');
+    conf = environment.getConfiguration('sample', {
+      _sample: '',
+      TEST: {
+        _sample: 'abc'
+      }
+    });
+    expect(conf).toBe('abc');
+  });
+
   it('should be able to access properties in dot notation', () => {
     const conf = {
       _anotherProp: {
