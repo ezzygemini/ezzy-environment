@@ -98,6 +98,8 @@ describe('Environment', () => {
     };
     expect(environment.getConfiguration('testProp.prop1.prop2.a', conf))
       .toBe(1);
+    expect(environment.getConfiguration('testProp.prop1.prop2.a', conf))
+      .toBe(1);
     expect(environment.getConfiguration('testProp.prop1.prop3.a', conf))
       .toBe(1);
     expect(environment.getConfiguration('anotherProp.prop1.a', conf))

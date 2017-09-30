@@ -7,6 +7,7 @@ try {
 const argument = require('ezzy-argument');
 const path = require('path');
 const deepmerge = require('deepmerge');
+const logger = require('ezzy-logger').logger;
 let inst;
 
 /**
@@ -198,6 +199,19 @@ class Environment {
       configuration[`_${this.name}`] || configuration[this.name.toUpperCase()];
     if (typeof envConfig === 'object') {
       configuration = deepmerge(configuration, envConfig);
+    }
+
+    const argConfig = argument(['configuration', 'package'], undefined);
+    if (argConfig) {
+      try {
+        configuration = deepmerge(argConfig, JSON.stringify(argConfig));
+      } catch (e) {
+        logger.error({
+          title: 'Configuration',
+          message: `The configuration provided isn't a valid json string.`,
+          error: e
+        });
+      }
     }
 
     let config = configuration[namespace] || configuration[`_${namespace}`];
