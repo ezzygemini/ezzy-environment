@@ -41,7 +41,13 @@ class Environment {
      * The application port.
      * @type {number}
      */
-    this.port = argument('PORT', 9000);
+    this.port = parseFloat(argument('PORT', 9000));
+
+    /**
+     * The application port.
+     * @type {number}
+     */
+    this.httpsPort = parseFloat(argument('HTTPS_PORT', this.port + 1));
 
     /**
      * Cache of entries.

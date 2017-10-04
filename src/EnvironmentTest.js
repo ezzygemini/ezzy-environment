@@ -7,6 +7,12 @@ describe('Environment', () => {
     environment = new Environment();
   });
 
+  it('should have the default ports defined', done => {
+    expect(environment.port).toBe(9000);
+    expect(environment.httpsPort).toBe(9001);
+    done();
+  });
+
   it('should have the necessary properties available', done => {
     expect(environment.development).toBe(false);
     expect(environment.alpha).toBe(false);
