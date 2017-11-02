@@ -221,6 +221,9 @@ class Environment {
     }
 
     let config = configuration[namespace] || configuration[`_${namespace}`];
+    if(!config){
+      logger.error(`The namespace you requested is undefined: ${namespace}`);
+    }
 
     const subEnvConfig = config[this.name] || config[`_${this.name}`] ||
       config[this.name.toUpperCase()];
