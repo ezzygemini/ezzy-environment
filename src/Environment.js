@@ -151,7 +151,7 @@ class Environment {
    * @param {string} key The key to set.
    * @param {*} value The value of the environment.
    */
-  set (key, value) {
+  set(key, value) {
     this[key] = value;
   }
 
@@ -161,7 +161,7 @@ class Environment {
    * @param {*} defaultValue The default value to return if undefined.
    * @returns {*}
    */
-  get (key, defaultValue) {
+  get(key, defaultValue) {
     return this[key] || defaultValue;
   }
 
@@ -221,8 +221,9 @@ class Environment {
     }
 
     let config = configuration[namespace] || configuration[`_${namespace}`];
-    if(!config){
-      logger.error(`The namespace you requested is undefined: ${namespace}`);
+    if (!config) {
+      logger.error(`The namespace you requested is undefined: ${scope}`);
+      return;
     }
 
     const subEnvConfig = config[this.name] || config[`_${this.name}`] ||
