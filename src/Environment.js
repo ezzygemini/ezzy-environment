@@ -26,7 +26,8 @@ class Environment {
     }
 
     // Look for a variable in our arguments
-    let env = argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
+    let env = process.env.NODE_ENV || process.env.ENVIRONMENT ||
+      argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
 
     // Sometimes the argument is just passed as --production
     const prodArg = argument('PRODUCTION', null);
