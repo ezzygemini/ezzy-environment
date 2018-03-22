@@ -239,6 +239,8 @@ class Environment {
 
     this._cache[scope] = config;
 
+    logger.debug('Environment Configuration', scope, config);
+
     return config;
   }
 
