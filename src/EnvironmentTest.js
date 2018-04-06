@@ -3,6 +3,10 @@ let environment;
 
 describe('Environment', () => {
 
+  beforeAll(() => {
+    process.env.CONFIGURATION = '{"someDarkProperty":{"a":5}}';
+  });
+
   beforeEach(() => {
     environment = new Environment();
   });
@@ -174,6 +178,15 @@ describe('Environment', () => {
     expect(environment
       .getConfiguration('testProp.myProps.a', conf, 'production'))
       .toBe(3);
+  });
+
+  it('should override the configuration based on system env arguments', () => {
+    const conf = {
+      someDarkProperty: {
+        a: 1
+      }
+    };
+    expect(environment.getConfiguration('someDarkProperty.a', conf)).toBe(5);
   });
 
 });

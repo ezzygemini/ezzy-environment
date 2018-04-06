@@ -254,7 +254,7 @@ class Environment {
     const argConfig = argument(['configuration', 'package'], undefined);
     if (argConfig) {
       try {
-        configuration = deepmerge(argConfig, JSON.stringify(argConfig));
+        configuration = deepmerge(configuration, JSON.parse(argConfig));
       } catch (e) {
         logger.error({
           title: 'Configuration',
