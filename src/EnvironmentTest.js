@@ -84,17 +84,25 @@ describe('Environment', () => {
   });
 
   it('should access correct configuration option', () => {
-    let conf = environment.getConfiguration('sample', {
-      _sample: 'abc',
+    let conf = environment.getConfiguration('sample.b', {
+      _sample: {
+        b: 'abc'
+      },
       TEST: {
-        _sample: ''
+        _sample: {
+          b: ''
+        }
       }
     });
     expect(conf).toBe('');
-    conf = environment.getConfiguration('sample', {
-      _sample: '',
+    conf = environment.getConfiguration('sample.a', {
+      _sample: {
+        a: ''
+      },
       TEST: {
-        _sample: 'abc'
+        _sample: {
+          a: 'abc'
+        }
       }
     });
     expect(conf).toBe('abc');
@@ -137,6 +145,35 @@ describe('Environment', () => {
       .toBe(1);
     expect(environment.getConfiguration('anotherProp.prop1.a', conf))
       .toBe(environment.getConfiguration('anotherProp.prop2.a', conf));
-  })
+  });
+
+  it('should be able to access other environment configuration', () => {
+    const conf = {
+      testProp: {
+        myProps: {
+          a: 1
+        }
+      },
+      TEST: {
+        testProp: {
+          myProps: {
+            a: 2
+          }
+        }
+      },
+      PRODUCTION: {
+        testProp: {
+          myProps: {
+            a: 3
+          }
+        }
+      }
+    };
+    expect(environment.getConfiguration('testProp.myProps.a', conf))
+      .toBe(2);
+    expect(environment
+      .getConfiguration('testProp.myProps.a', conf, 'production'))
+      .toBe(3);
+  });
 
 });

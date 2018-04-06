@@ -10,6 +10,14 @@ const deepmerge = require('deepmerge');
 const logger = require('ezzy-logger').logger;
 let inst;
 
+const DEVELOPMENT = 'development';
+const TEST = 'test';
+const ALPHA = 'alpha';
+const BETA = 'beta';
+const GAMMA = 'gamma';
+const PRODUCTION = 'production';
+const DELTA = 'delta';
+
 /**
  * Environment
  */
@@ -55,8 +63,16 @@ class Environment {
      * @type {Object}
      * @private
      */
-    this._cache = {};
-
+    this._cache = {
+      [PRODUCTION]: {},
+      [DEVELOPMENT]: {},
+      [TEST]: {},
+      [ALPHA]: {},
+      [BETA]: {},
+      [GAMMA]: {},
+      [PRODUCTION]: {},
+      [DELTA]: {},
+    };
   }
 
   /**
@@ -107,20 +123,28 @@ class Environment {
     this.gamma = env === 'gamma';
 
     /**
+     * If environment is in delta.
+     * @type {boolean}
+     */
+    this.delta = env === 'delta';
+
+    /**
      * The environment name.
      */
     if (this.dev) {
-      this.name = 'development';
+      this.name = DEVELOPMENT;
     } else if (this.test) {
-      this.name = 'test';
+      this.name = TEST;
     } else if (this.alpha) {
-      this.name = 'alpha';
+      this.name = ALPHA;
     } else if (this.beta) {
-      this.name = 'beta';
+      this.name = BETA;
     } else if (this.gamma) {
-      this.name = 'gamma';
+      this.name = GAMMA;
+    } else if (this.delta) {
+      this.name = DELTA;
     } else {
-      this.name = 'production';
+      this.name = PRODUCTION;
     }
 
     /**
@@ -133,7 +157,7 @@ class Environment {
      * @type {boolean}
      */
     this.production = !this.development && !this.alpha &&
-      !this.beta && !this.gamma && !this.test;
+      !this.beta && !this.gamma && !this.test && !this.delta;
   }
 
   /**
@@ -190,11 +214,16 @@ class Environment {
    *
    * @param {string} scope The scope to look for.
    * @param {Object} defaultConfig The default configuration if none is found.
+   * @param {string} env The environment where to pull the config.
    * @returns {*|Object}
    */
-  getConfiguration(scope, defaultConfig = {}) {
-    if (this._cache[scope]) {
-      return this._cache[scope];
+  getConfiguration(scope, defaultConfig = {}, env) {
+    env = env || this.name;
+
+    if (!this._cache[env]) {
+      throw new Error(`We couldn't find an environment called "${env}".`);
+    } else if (this._cache[env][scope]) {
+      return this._cache[env][scope];
     }
 
     let configuration = pkg || defaultConfig;
@@ -202,8 +231,22 @@ class Environment {
     const namespace = scopes.shift();
     const subScopes = scopes.join('.');
 
-    const envConfig = configuration[this.name] ||
-      configuration[`_${this.name}`] || configuration[this.name.toUpperCase()];
+    if (env !== this.name) {
+      logger.warn({
+        title: 'Configuration',
+        message: 'You\'re accessing a configuration from a ' +
+        'different environment. Was this is intended?',
+        data: {
+          currentEnvironment: this.name,
+          environmentRequested: env,
+          scope
+        }
+      })
+    }
+
+    const envConfig = configuration[env] ||
+      configuration[`_${env}`] ||
+      configuration[env.toUpperCase()];
     if (typeof envConfig === 'object') {
       configuration = deepmerge(configuration, envConfig);
     }
@@ -227,8 +270,9 @@ class Environment {
       return;
     }
 
-    const subEnvConfig = config[this.name] || config[`_${this.name}`] ||
-      config[this.name.toUpperCase()];
+    const subEnvConfig = config[env] ||
+      config[`_${env}`] ||
+      config[env.toUpperCase()];
     if (subEnvConfig) {
       config = deepmerge(config, subEnvConfig);
     }
@@ -237,7 +281,7 @@ class Environment {
       config = eval(`config.${scopes.join('.')}`);
     }
 
-    this._cache[scope] = config;
+    this._cache[env][scope] = config;
 
     logger.debug('Environment Configuration', scope, config);
 
