@@ -129,6 +129,12 @@ class Environment {
     this.delta = env === 'delta';
 
     /**
+     * Checks if we should be using ports when calling domains.
+     * @type {boolean}
+     */
+    this.usePorts = this.dev || this.test;
+
+    /**
      * The environment name.
      */
     if (this.dev) {
