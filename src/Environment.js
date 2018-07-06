@@ -1,62 +1,69 @@
 let pkg;
 try {
-  pkg = require('../../../package.json');
+  pkg = require("../../../package.json");
 } catch (e) {
   pkg = null;
 }
-const argument = require('ezzy-argument');
-const path = require('path');
-const deepmerge = require('deepmerge');
-const logger = require('ezzy-logger').logger;
+const argument = require("ezzy-argument");
+const { normalize } = require("path");
+const deepmerge = require("deepmerge");
+const logger = require("ezzy-logger").logger;
 let inst;
 
-const DEVELOPMENT = 'development';
-const TEST = 'test';
-const ALPHA = 'alpha';
-const BETA = 'beta';
-const GAMMA = 'gamma';
-const PRODUCTION = 'production';
-const DELTA = 'delta';
+const DEVELOPMENT = "development";
+const TEST = "test";
+const ALPHA = "alpha";
+const BETA = "beta";
+const GAMMA = "gamma";
+const PRODUCTION = "production";
+const DELTA = "delta";
 
 /**
  * Environment
  */
 class Environment {
+  /**
+   * @name EnvironmentConfig
+   * @property {string|string[]} usePortsOn The environments that ports should be used.
+   */
 
   /**
    * Constructor.
+   * @param {EnvironmentConfig} config
    */
-  constructor() {
-
+  constructor(config) {
     const json = JSON.stringify(process.env);
-    if (json !== '{}' && !process.env.HIDE_ARGUMENTS) {
+    if (json !== "{}" && !process.env.HIDE_ARGUMENTS) {
       console.log(`[PROCESS] ${json}`);
     }
 
     // Look for a variable in our arguments
-    let env = process.env.NODE_ENV || process.env.ENVIRONMENT ||
-      argument(['ENVIRONMENT', 'NODE_ENV'], 'production');
+    let env =
+      config.env ||
+      process.env.NODE_ENV ||
+      process.env.ENVIRONMENT ||
+      argument(["ENVIRONMENT", "NODE_ENV"], "production");
 
     // Sometimes the argument is just passed as --production
-    const prodArg = argument('PRODUCTION', null);
-    if (prodArg && prodArg !== 'false') {
-      env = 'production';
+    const prodArg = argument("PRODUCTION", null);
+    if (prodArg && prodArg !== "false") {
+      env = "production";
     }
 
     // Set the environment.
-    this.setEnvironment(env);
+    this.setEnvironment(Object.assign(config, { env }));
 
     /**
      * The application port.
      * @type {number}
      */
-    this.port = parseFloat(argument('PORT', 9000));
+    this.port = parseFloat(argument("PORT", 9000));
 
     /**
      * The application port.
      * @type {number}
      */
-    this.httpsPort = parseFloat(argument('HTTPS_PORT', this.port + 1));
+    this.httpsPort = parseFloat(argument("HTTPS_PORT", this.port + 1));
 
     /**
      * Cache of entries.
@@ -71,20 +78,23 @@ class Environment {
       [BETA]: {},
       [GAMMA]: {},
       [PRODUCTION]: {},
-      [DELTA]: {},
+      [DELTA]: {}
     };
   }
 
   /**
    * Sets the environment.
-   * @param env
+   * @param {EnvironmentConfig} config The environment configuration.
    */
-  setEnvironment(env) {
+  setEnvironment({
+    env,
+    usePortsOn = [DEVELOPMENT, TEST]
+  }) {
     /**
      * If environment is in development.
      * @type {boolean}
      */
-    this.development = env.indexOf('dev') > -1;
+    this.development = env.includes("dev");
 
     /**
      * Shortcut to development property.
@@ -96,7 +106,7 @@ class Environment {
      * If environment is in testing.
      * @type {boolean}
      */
-    this.test = env.indexOf('test') > -1;
+    this.test = env.includes("test");
 
     /**
      * Shortcut to testing property.
@@ -108,31 +118,25 @@ class Environment {
      * If environment is in alpha.
      * @type {boolean}
      */
-    this.alpha = env === 'alpha';
+    this.alpha = env === "alpha";
 
     /**
      * If environment is in beta.
      * @type {boolean}
      */
-    this.beta = env === 'beta';
+    this.beta = env === "beta";
 
     /**
      * If environment is in gamma.
      * @type {boolean}
      */
-    this.gamma = env === 'gamma';
+    this.gamma = env === "gamma";
 
     /**
      * If environment is in delta.
      * @type {boolean}
      */
-    this.delta = env === 'delta';
-
-    /**
-     * Checks if we should be using ports when calling domains.
-     * @type {boolean}
-     */
-    this.usePorts = this.dev || this.test;
+    this.delta = env === "delta";
 
     /**
      * The environment name.
@@ -154,16 +158,27 @@ class Environment {
     }
 
     /**
+     * Checks if we should be using ports when calling domains.
+     * @type {boolean}
+     */
+    this.usePorts = usePortsOn.includes(this.name);
+
+    /**
      * Specifies the node modules path.
      */
-    this.nodeModules = path.normalize(__dirname + '/../../');
+    this.nodeModules = normalize(__dirname + "/../../");
 
     /**
      * If environment is in production
      * @type {boolean}
      */
-    this.production = !this.development && !this.alpha &&
-      !this.beta && !this.gamma && !this.test && !this.delta;
+    this.production =
+      !this.development &&
+      !this.alpha &&
+      !this.beta &&
+      !this.gamma &&
+      !this.test &&
+      !this.delta;
   }
 
   /**
@@ -233,37 +248,39 @@ class Environment {
     }
 
     let configuration = pkg || defaultConfig;
-    const scopes = scope.split('.');
+    const scopes = scope.split(".");
     const namespace = scopes.shift();
-    const subScopes = scopes.join('.');
+    const subScopes = scopes.join(".");
 
     if (env !== this.name) {
       logger.warn({
-        title: 'Configuration',
-        message: 'You\'re accessing a configuration from a ' +
-        'different environment. Was this is intended?',
+        title: "Configuration",
+        message:
+          "You're accessing a configuration from a " +
+          "different environment. Was this is intended?",
         data: {
           currentEnvironment: this.name,
           environmentRequested: env,
           scope
         }
-      })
+      });
     }
 
-    const envConfig = configuration[env] ||
+    const envConfig =
+      configuration[env] ||
       configuration[`_${env}`] ||
       configuration[env.toUpperCase()];
-    if (typeof envConfig === 'object') {
+    if (typeof envConfig === "object") {
       configuration = deepmerge(configuration, envConfig);
     }
 
-    const argConfig = argument(['configuration', 'package'], undefined);
+    const argConfig = argument(["configuration", "package"], undefined);
     if (argConfig) {
       try {
         configuration = deepmerge(configuration, JSON.parse(argConfig));
       } catch (e) {
         logger.error({
-          title: 'Configuration',
+          title: "Configuration",
           message: `The configuration provided isn't a valid json string.`,
           error: e
         });
@@ -276,24 +293,22 @@ class Environment {
       return;
     }
 
-    const subEnvConfig = config[env] ||
-      config[`_${env}`] ||
-      config[env.toUpperCase()];
+    const subEnvConfig =
+      config[env] || config[`_${env}`] || config[env.toUpperCase()];
     if (subEnvConfig) {
       config = deepmerge(config, subEnvConfig);
     }
 
     if (subScopes.length) {
-      config = eval(`config.${scopes.join('.')}`);
+      config = eval(`config.${scopes.join(".")}`);
     }
 
     this._cache[env][scope] = config;
 
-    logger.debug('Environment Configuration', scope, config);
+    logger.debug("Environment Configuration", scope, config);
 
     return config;
   }
-
 }
 
 module.exports = Environment;
