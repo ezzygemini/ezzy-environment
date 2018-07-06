@@ -24,6 +24,7 @@ const DELTA = "delta";
 class Environment {
   /**
    * @name EnvironmentConfig
+   * @property {boolean} env The explicit environment that overrides shell arguments.
    * @property {boolean} usePorts If the environment should be using ports.
    * @property {boolean) useMinifiedAssets If the environment should use minified assets.
    */
@@ -32,7 +33,7 @@ class Environment {
    * Constructor.
    * @param {EnvironmentConfig} config
    */
-  constructor(config) {
+  constructor(config = {}) {
     const json = JSON.stringify(process.env);
     if (json !== "{}" && !process.env.HIDE_ARGUMENTS) {
       console.log(`[PROCESS] ${json}`);
@@ -41,8 +42,8 @@ class Environment {
     // Look for a variable in our arguments
     let env =
       config.env ||
-      process.env.NODE_ENV ||
-      process.env.ENVIRONMENT ||
+      process.env['NODE_ENV'] ||
+      process.env['ENVIRONMENT'] ||
       argument(["ENVIRONMENT", "NODE_ENV"], "production");
 
     // Sometimes the argument is just passed as --production
