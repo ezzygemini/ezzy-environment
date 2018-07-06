@@ -24,7 +24,8 @@ const DELTA = "delta";
 class Environment {
   /**
    * @name EnvironmentConfig
-   * @property {string|string[]} usePortsOn The environments that ports should be used.
+   * @property {boolean} usePorts If the environment should be using ports.
+   * @property {boolean) useMinifiedAssets If the environment should use minified assets.
    */
 
   /**
@@ -86,10 +87,7 @@ class Environment {
    * Sets the environment.
    * @param {EnvironmentConfig} config The environment configuration.
    */
-  setEnvironment({
-    env,
-    usePortsOn = [DEVELOPMENT, TEST]
-  }) {
+  setEnvironment({ env, usePorts, useMinifiedAssets }) {
     /**
      * If environment is in development.
      * @type {boolean}
@@ -158,10 +156,22 @@ class Environment {
     }
 
     /**
-     * Checks if we should be using ports when calling domains.
+     * Indicates if we should be using ports when calling domains.
      * @type {boolean}
      */
-    this.usePorts = usePortsOn.includes(this.name);
+    this.usePorts =
+      usePorts === undefined
+        ? [DEVELOPMENT, TEST].includes(this.name)
+        : usePorts;
+
+    /**
+     * Indicates if we should be using minfied assets throughout.
+     * @type {boolean}
+     */
+    this.minifyAssets =
+      useMinifiedAssets === undefined
+        ? this.name === DEVELOPMENT
+        : useMinifiedAssets;
 
     /**
      * Specifies the node modules path.
