@@ -170,7 +170,7 @@ class Environment {
      */
     this.minifyAssets =
       useMinifiedAssets === undefined
-        ? this.name === DEVELOPMENT
+        ? this.name !== DEVELOPMENT
         : useMinifiedAssets;
 
     /**
