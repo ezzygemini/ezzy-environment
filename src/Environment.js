@@ -42,8 +42,8 @@ class Environment {
     // Look for a variable in our arguments
     let env =
       config.env ||
-      process.env['NODE_ENV'] ||
-      process.env['ENVIRONMENT'] ||
+      process.env["NODE_ENV"] ||
+      process.env["ENVIRONMENT"] ||
       argument(["ENVIRONMENT", "NODE_ENV"], "production");
 
     // Sometimes the argument is just passed as --production
@@ -165,14 +165,25 @@ class Environment {
         ? [DEVELOPMENT, TEST].includes(this.name)
         : usePorts;
 
+    if (useMinifiedAssets === undefined) {
+      argument(
+        [
+          "MINIFY_ASSETS",
+          "MINIFIED_ASSETS",
+          "USE_MINIFIED_ASSETS",
+          "MINIFIED",
+          "MIN_ASSETS"
+        ],
+        ""
+      );
+    }
+
     /**
      * Indicates if we should be using minfied assets throughout.
      * @type {boolean}
      */
     this.minifyAssets =
-      useMinifiedAssets === undefined
-        ? this.name !== DEVELOPMENT
-        : useMinifiedAssets;
+      useMinifiedAssets === "" ? this.name !== DEVELOPMENT : useMinifiedAssets;
 
     /**
      * Specifies the node modules path.
