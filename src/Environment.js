@@ -166,7 +166,7 @@ class Environment {
         : usePorts;
 
     if (useMinifiedAssets === undefined) {
-      argument(
+      const minArg = argument(
         [
           "MINIFY_ASSETS",
           "MINIFIED_ASSETS",
@@ -174,8 +174,11 @@ class Environment {
           "MINIFIED",
           "MIN_ASSETS"
         ],
-        ""
+        "false"
       );
+      if (minArg !== "false") {
+        useMinifiedAssets = true;
+      }
     }
 
     /**
@@ -183,7 +186,9 @@ class Environment {
      * @type {boolean}
      */
     this.minifyAssets =
-      useMinifiedAssets === "" ? this.name !== DEVELOPMENT : useMinifiedAssets;
+      useMinifiedAssets === undefined
+        ? this.name !== DEVELOPMENT
+        : useMinifiedAssets;
 
     /**
      * Specifies the node modules path.
