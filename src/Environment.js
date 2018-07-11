@@ -166,7 +166,7 @@ class Environment {
         : usePorts;
 
     if (useMinifiedAssets === undefined) {
-      const minArg = argument(
+      useMinifiedAssets = argument(
         [
           "MINIFY_ASSETS",
           "MINIFIED_ASSETS",
@@ -174,11 +174,8 @@ class Environment {
           "MINIFIED",
           "MIN_ASSETS"
         ],
-        "false"
-      );
-      if (minArg !== "false") {
-        useMinifiedAssets = true;
-      }
+        this.name === DEVELOPMENT ? "true" : "false"
+      ) !== "false";
     }
 
     /**
