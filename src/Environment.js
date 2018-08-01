@@ -7,6 +7,7 @@ try {
 const argument = require("ezzy-argument");
 const { normalize } = require("path");
 const deepmerge = require("deepmerge");
+const merge = deepmerge.default || deepmerge;
 const logger = require("ezzy-logger").logger;
 let inst;
 
@@ -295,13 +296,13 @@ class Environment {
       configuration[`_${env}`] ||
       configuration[env.toUpperCase()];
     if (typeof envConfig === "object") {
-      configuration = deepmerge(configuration, envConfig);
+      configuration = merge(configuration, envConfig);
     }
 
     const argConfig = argument(["configuration", "package"], undefined);
     if (argConfig) {
       try {
-        configuration = deepmerge(configuration, JSON.parse(argConfig));
+        configuration = merge(configuration, JSON.parse(argConfig));
       } catch (e) {
         logger.error({
           title: "Configuration",
@@ -320,7 +321,7 @@ class Environment {
     const subEnvConfig =
       config[env] || config[`_${env}`] || config[env.toUpperCase()];
     if (subEnvConfig) {
-      config = deepmerge(config, subEnvConfig);
+      config = merge(config, subEnvConfig);
     }
 
     if (subScopes.length) {
