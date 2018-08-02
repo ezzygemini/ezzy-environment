@@ -167,16 +167,17 @@ class Environment {
         : usePorts;
 
     if (useMinifiedAssets === undefined) {
-      useMinifiedAssets = argument(
-        [
-          "MINIFY_ASSETS",
-          "MINIFIED_ASSETS",
-          "USE_MINIFIED_ASSETS",
-          "MINIFIED",
-          "MIN_ASSETS"
-        ],
-        this.name === DEVELOPMENT ? "false" : "true"
-      ) !== "false";
+      useMinifiedAssets =
+        argument(
+          [
+            "MINIFY_ASSETS",
+            "MINIFIED_ASSETS",
+            "USE_MINIFIED_ASSETS",
+            "MINIFIED",
+            "MIN_ASSETS"
+          ],
+          this.name === DEVELOPMENT ? "false" : "true"
+        ) !== "false";
     }
 
     /**
@@ -215,6 +216,14 @@ class Environment {
       inst = new Environment();
     }
     return inst;
+  }
+
+  /**
+   * Obtains the package contents as it was parsed.
+   * @returns {*}
+   */
+  get pkg() {
+    return pkg;
   }
 
   /**
