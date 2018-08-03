@@ -176,7 +176,7 @@ class Environment {
             "MINIFIED",
             "MIN_ASSETS"
           ],
-          this.name === DEVELOPMENT ? "false" : "true"
+          this.name === DEVELOPMENT || this.name === TEST ? "false" : "true"
         ) !== "false";
     }
 
