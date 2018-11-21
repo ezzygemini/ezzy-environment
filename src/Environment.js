@@ -233,6 +233,7 @@ class Environment {
    */
   set(key, value) {
     this[key] = value;
+    return this;
   }
 
   /**
@@ -250,8 +251,14 @@ class Environment {
    * @param {*} args The arguments to be passed.
    * @returns {*}
    */
-  argument(...args) {
-    return argument.apply(this, args);
+  getArgument(...args) {
+    const name = Array.isArray(args[0]) ? args[0][0] : args[0];
+    if (this[name] !== undefined) {
+      return this[name];
+    }
+    const value = argument.apply(this, args);
+    this[name] = value;
+    return this[name];
   }
 
   /**

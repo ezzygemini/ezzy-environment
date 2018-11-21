@@ -1,2 +1,7 @@
 const Environment = require('./src/Environment');
-module.exports = Environment.inst;
+const environment = Environment.inst;
+
+environment.config = (...args) => environment.getConfiguration(...args);
+environment.argument = (...args) => environment.getArgument(...args);
+
+module.exports = environment;
