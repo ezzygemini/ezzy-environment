@@ -1,7 +1,7 @@
 {
   "name": "ezzy-environment",
   "description": "A lightweight tool to provide common environment settings",
-  "version": "1.1.1",
+  "version": "1.1.0",
   "author": {
     "name": "Moises Romero",
     "url": "http://ezzygemini.com",
@@ -21,10 +21,10 @@
   "license": "MIT",
   "dependencies": {
     "deepmerge": "^2.1.0",
-    "ezzy-argument": "^0.1.20",
+    "ezzy-argument": "^0.1.23",
     "ezzy-logger": "^1.0.0"
   },
   "devDependencies": {
-    "ezzy-testing": "^0.1.26"
+    "ezzy-testing": "^0.1.24"
   }
 }
